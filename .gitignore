@@ -1,0 +1,7 @@
+build/
+
+# Environment
+.vscode/
+.idea/
+*.iml
+.DS_Store

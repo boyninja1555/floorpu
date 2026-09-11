@@ -1,0 +1,3 @@
+[submodule "assembler/vendor/vecfloor"]
+	path = assembler/vendor/vecfloor
+	url = https://github.com/boyninja1555/vecfloor.git
