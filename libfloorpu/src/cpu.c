@@ -104,19 +104,21 @@ u64 cpu_step(CPU *cpu)
 
     case OP_JUMPRIZ: // JUMPRIZ reg_addr_l(u8) reg_addr_h(u8) reg_condition(u8)
     {
-        u8 reg_addr_l = cpu->registers[consume_u8(cpu)];
-        if (cpu->registers[consume_u8(cpu)] == 0)
-            cpu_set_pc(cpu, ((u16)cpu->registers[consume_u8(cpu)] << 8) | reg_addr_l);
-
+        u8 reg_addr_l = consume_u8(cpu);
+        u8 reg_addr_h = consume_u8(cpu);
+        u8 reg_condition = consume_u8(cpu);
+        if (cpu->registers[reg_condition] == 0)
+            cpu_set_pc(cpu, ((u16)cpu->registers[reg_addr_h] << 8) | cpu->registers[reg_addr_l]);
         break;
     }
 
     case OP_JUMPRNZ: // JUMPRNZ reg_addr_l(u8) reg_addr_h(u8) reg_condition(u8)
     {
-        u8 reg_addr_l = cpu->registers[consume_u8(cpu)];
-        if (cpu->registers[consume_u8(cpu)] != 0)
-            cpu_set_pc(cpu, ((u16)cpu->registers[consume_u8(cpu)] << 8) | reg_addr_l);
-
+        u8 reg_addr_l = consume_u8(cpu);
+        u8 reg_addr_h = consume_u8(cpu);
+        u8 reg_condition = consume_u8(cpu);
+        if (cpu->registers[reg_condition] != 0)
+            cpu_set_pc(cpu, ((u16)cpu->registers[reg_addr_h] << 8) | cpu->registers[reg_addr_l]);
         break;
     }
 
@@ -140,11 +142,12 @@ u64 cpu_step(CPU *cpu)
         break;
     }
 
-    case OP_LOADP: // LOADP reg_addr_l(u8) reg_addr_r(u8) reg(u8)
+    case OP_LOADP: // LOADP reg_addr_l(u8) reg_addr_h(u8) reg_target(u8)
     {
         u8 reg_addr_l = consume_u8(cpu);
-        u8 reg_addr_r = consume_u8(cpu);
-        cpu->registers[consume_u8(cpu)] = ram[((u16)cpu->registers[consume_u8(cpu)] << 8) | cpu->registers[reg_addr_l]];
+        u8 reg_addr_h = consume_u8(cpu);
+        u8 reg_target = consume_u8(cpu);
+        cpu->registers[reg_target] = ram[((u16)cpu->registers[reg_addr_h] << 8) | cpu->registers[reg_addr_l]];
         break;
     }
 
@@ -155,12 +158,12 @@ u64 cpu_step(CPU *cpu)
         break;
     }
 
-    case OP_STOREP: // STOREP reg(u8) reg_addr_l(u8) reg_addr_r(u8)
+    case OP_STOREP: // STOREP reg_value(u8) reg_addr_l(u8) reg_addr_h(u8)
     {
-        u8 reg = consume_u8(cpu);
+        u8 reg_value = consume_u8(cpu);
         u8 reg_addr_l = consume_u8(cpu);
-        u8 reg_addr_r = consume_u8(cpu);
-        ram[((u16)cpu->registers[consume_u8(cpu)] << 8) | cpu->registers[reg_addr_l]] = cpu->registers[reg];
+        u8 reg_addr_h = consume_u8(cpu);
+        ram[((u16)cpu->registers[reg_addr_h] << 8) | cpu->registers[reg_addr_l]] = cpu->registers[reg_value];
         break;
     }
 
