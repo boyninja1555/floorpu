@@ -28,7 +28,9 @@ typedef enum
     OP_SET,
     OP_COPY,
     OP_LOAD,
+    OP_LOADP,
     OP_STORE,
+    OP_STOREP,
     OP_STOREL,
 
     // Stack

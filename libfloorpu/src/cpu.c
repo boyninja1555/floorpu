@@ -140,10 +140,27 @@ u64 cpu_step(CPU *cpu)
         break;
     }
 
+    case OP_LOADP: // LOADP reg_addr_l(u8) reg_addr_r(u8) reg(u8)
+    {
+        u8 reg_addr_l = consume_u8(cpu);
+        u8 reg_addr_r = consume_u8(cpu);
+        cpu->registers[consume_u8(cpu)] = ram[((u16)cpu->registers[consume_u8(cpu)] << 8) | cpu->registers[reg_addr_l]];
+        break;
+    }
+
     case OP_STORE: // STORE reg(u8) addr(u16)
     {
         u8 reg = consume_u8(cpu);
         ram[consume_u16(cpu)] = cpu->registers[reg];
+        break;
+    }
+
+    case OP_STOREP: // STOREP reg(u8) reg_addr_l(u8) reg_addr_r(u8)
+    {
+        u8 reg = consume_u8(cpu);
+        u8 reg_addr_l = consume_u8(cpu);
+        u8 reg_addr_r = consume_u8(cpu);
+        ram[((u16)cpu->registers[consume_u8(cpu)] << 8) | cpu->registers[reg_addr_l]] = cpu->registers[reg];
         break;
     }
 

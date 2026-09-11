@@ -6,7 +6,7 @@ void parser_free(ParserState *parser)
 {
 }
 
-static const size_t instructionc = 21;
+static const size_t instructionc = 23;
 static const InstructionDefinition instructionv[] = {
     {"halt", OP_HALT, 0, {}},
     {"jump", OP_JUMP, 1, {ARG_U16}},
@@ -18,7 +18,9 @@ static const InstructionDefinition instructionv[] = {
     {"set", OP_SET, 2, {ARG_U8, ARG_U8}},
     {"copy", OP_COPY, 2, {ARG_U8, ARG_U8}},
     {"load", OP_LOAD, 2, {ARG_U16, ARG_U8}},
+    {"loadp", OP_LOAD, 3, {ARG_U8, ARG_U8, ARG_U8}},
     {"store", OP_STORE, 2, {ARG_U8, ARG_U16}},
+    {"storep", OP_STORE, 3, {ARG_U8, ARG_U8, ARG_U8}},
     {"storel", OP_STOREL, 2, {ARG_U8, ARG_U16}},
     {"push", OP_PUSH, 1, {ARG_U8}},
     {"pushl", OP_PUSHL, 1, {ARG_U8}},
