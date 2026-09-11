@@ -1,7 +1,16 @@
+#define _POSIX_C_SOURCE 199309L
+#include <time.h>
 #include <string.h>
 #include <stdio.h>
 #include "libfloorpu/ram.h"
 #include "libfloorpu/cpu.h"
+
+u64 time_ns(void)
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return ((uint64_t)ts.tv_sec * CPU_NS_PER_SECOND) + (uint64_t)ts.tv_nsec;
+}
 
 int main(int argc, const char *argv[])
 {
@@ -47,8 +56,19 @@ int main(int argc, const char *argv[])
     CPU cpu = {};
     cpu_init(&cpu);
 
+    u64 time_started = time_ns();
+    u64 cycles = 0;
     while (cpu.running)
-        cpu_step(&cpu);
+    {
+        uint64_t time_now = time_ns();
+        uint64_t time_elapsed = time_now - time_started;
+        uint64_t target_cycles = time_elapsed / CPU_NS_PER_CYCLE;
+        while (cpu.running && cycles < target_cycles)
+            cycles += cpu_step(&cpu);
+
+        struct timespec delay = {.tv_sec = 0, .tv_nsec = 1};
+        nanosleep(&delay, NULL);
+    }
 
     return 0;
 }

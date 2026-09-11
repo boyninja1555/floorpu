@@ -9,6 +9,10 @@
 #define CPU_REG_PC_L 14
 #define CPU_REG_PC_H 15
 
+#define CPU_CLOCK_SPEED 2000000ULL
+#define CPU_NS_PER_SECOND 1000000000ULL
+#define CPU_NS_PER_CYCLE (CPU_NS_PER_SECOND / CPU_CLOCK_SPEED)
+
 typedef enum
 {
     // Control
@@ -57,6 +61,6 @@ void cpu_set_pc(CPU *cpu, u16 pc);
 
 void cpu_init(CPU *cpu);
 
-void cpu_step(CPU *cpu);
+u64 cpu_step(CPU *cpu);
 
 void cpu_halt(CPU *cpu);

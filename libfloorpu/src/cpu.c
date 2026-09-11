@@ -57,8 +57,11 @@ void cpu_init(CPU *cpu)
     cpu_set_pc(cpu, RAM_ADDR_ROM);
 }
 
-void cpu_step(CPU *cpu)
+u64 cpu_step(CPU *cpu)
 {
+    if (!cpu->running)
+        return 0;
+
     u8 opcode = consume_u8(cpu);
     switch (opcode)
     {
@@ -254,6 +257,8 @@ void cpu_step(CPU *cpu)
     for (u8 i = 0; i < CPU_REGISTERS; i++)
         printf("r%u = 0x%02X, ", i, cpu->registers[i]);
     printf("\n");
+
+    return 1;
 }
 
 void cpu_halt(CPU *cpu)
